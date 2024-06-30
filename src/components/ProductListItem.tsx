@@ -12,14 +12,14 @@ const ProductList = ({
         <img
           className="h-[300px] w-[300px] object-contain"
           alt={`${title} Image`}
-          src={images[0]}
+          src={images?.[0] || ""}
         />
       </div>
       <div className="flex-1">
         <div className="p-6 flex flex-col gap-6">
-          <p className="text-blue-600/100 text-4xl">{title}</p>
-          <p className="text-xl">{description}</p>
-          <p className="text-4xl">{price} $</p>
+          <p className="text-blue-600/100 text-4xl">{title || ""}</p>
+          <p className="text-xl">{description || ""}</p>
+          <p className="text-4xl">{price ?? 0} $</p>
         </div>
       </div>
     </div>
