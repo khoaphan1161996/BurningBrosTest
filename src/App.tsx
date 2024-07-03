@@ -23,6 +23,7 @@ function App() {
 
   // Get Product
   const loadProducts = (query: IQueryProduct) => {
+    setLoading(true);
     if (!searchValue) {
       getProduts({ ...query })
         .then(({ products, total }) => {
@@ -59,9 +60,7 @@ function App() {
       window.innerHeight + document.documentElement.scrollTop + 1 >=
       document.documentElement.scrollHeight
     ) {
-      setLoading(true);
       if (productList.length === totalProduct) {
-        setLoading(false);
         return;
       }
       debounceScrollFunction();
