@@ -1,4 +1,3 @@
-import { debounce } from "lodash";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -11,6 +10,7 @@ import { PAGE_DEFAULT } from "./constants/page";
 import { getSkipByPage, handleToastify } from "./helpers";
 import { StringMap } from "./types/api";
 import { IAPIResProduct, IQueryProduct } from "./types/products";
+import useInfinityScroll from "./hooks/useInfinityScroll";
 
 function App() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -19,7 +19,9 @@ function App() {
   const [totalProduct, setTotalProduct] = useState<number>();
   const [loading, setLoading] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>("");
-  const pageParam = searchParams.get("page");
+
+  // hooks
+  useInfinityScroll(productList.length !== totalProduct);
 
   // Get Product
   const loadProducts = (query: IQueryProduct) => {
@@ -48,32 +50,6 @@ function App() {
         handleToastify("error", error);
       });
   };
-
-  // Debounce When infinity
-  const debounceScrollFunction = debounce(async () => {
-    await setSearchParams({ page: String(Number(pageParam) + 1) });
-  }, 300);
-
-  // Handle Update Product Infinity Scroll With Infinity
-  const handleScroll = async () => {
-    if (
-      window.innerHeight + document.documentElement.scrollTop + 1 >=
-      document.documentElement.scrollHeight
-    ) {
-      if (productList.length === totalProduct) {
-        return;
-      }
-      debounceScrollFunction();
-    }
-  };
-
-  // Add & Remove Event Scroll
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [pageParam]);
 
   // Get Params URL & Load Product
   useEffect(() => {
